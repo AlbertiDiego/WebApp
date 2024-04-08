@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>TUTTI I POST</h2>
+        <input type="text" id="keywordInput" placeholder="Inserisci una parola chiave">
+        <button onclick="filterPosts()">Filtra</button>
+        {% for post in posts %}
+            <div class="post">
+                <p>{{ post['content'] }}</p>
+                <p>Autore: {{ post['author'] }}</p>
+                <p>Data e Ora: {{ post['timestamp'] }}</p>
+                <button onclick="showComments('{{ post['_id'] }}')">Mostra Commenti</button>
+                <div id="comments_{{ post['_id'] }}" style="display: none;">
+                    {% for comment in post['comments'] %}
+                      <div class="comment-box">
+                        <p><strong>{{ comment['author'] }}</strong></p>
+                        <p>{{ comment['content'] }}</p>
+                      </div>
+                    {% endfor %}
+                    <form onsubmit="addComment('{{ post['_id'] }}'); return false;">
+                        <textarea id="comment_content_{{ post['_id'] }}" rows="3" cols="40" style="width: 1130px; height: 100px;" placeholder="Inserisci il tuo commento" required></textarea>
+                        <br>
+                        <button type="submit">Aggiungi Commento</button>
+                    </form>
+                </div>
+                <button onclick="likePost('{{ post['_id'] }}')">Mi Piace</button>
+                <p>Numero di Mi Piace: <span id="likes_{{ post['_id'] }}">{{ post['likes'] }}</span></p>
+            </div>
+            <hr>
+        {% endfor %}
+        <br>
+        <a href="/my_contents">I miei post</a><br><br>
+        <a href="/logout">Logout</a>
+    </div>
+    <script>
+        function showComments(postId) {
+            var commentsDiv = document.getElementById('comments_' + postId);
+            if (commentsDiv.style.display === 'none') {
+                commentsDiv.style.display = 'block';
+            } else {
+                commentsDiv.style.display = 'none';
+            }
+        }
+      function likePost(postId) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '/like_post/' + postId, true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4) {
+                  if (xhr.status === 200) {
+                      var likesSpan = document.getElementById('likes_' + postId);
+                      var currentLikes = parseInt(likesSpan.innerText);
+                      likesSpan.innerText = currentLikes + 1;
+                  } else if (xhr.status === 400) {
+                      alert('Hai già messo Mi Piace a questo post.');
+                  } else {
+                      alert('Errore durante l\'aggiunta del Mi Piace.');
+                  }
+              }
+          };
+          xhr.send();
+      }
+
+      function addComment(postId) {
+          var content = document.getElementById('comment_content_' + postId).value;
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '/add_comment/' + postId, true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4) {
+                  if (xhr.status === 200) {
+                      alert('Commento aggiunto con successo.');
+                      window.location.reload();
+                  } else {
+                      alert('Errore durante l\'aggiunta del commento.');
+                  }
+              }
+          };
+          xhr.send(JSON.stringify({ content: content }));
+      }
+
+
+      function filterPosts() {
+                  var keyword = document.getElementById('keywordInput').value.toLowerCase();
+
+                  var formData = new FormData();
+                  formData.append('keywordInput', keyword);
+
+                  var xhr = new XMLHttpRequest();
+                  xhr.open('POST', '/filter_posts', true);
+                  xhr.onreadystatechange = function() {
+                      if (xhr.readyState === 4 && xhr.status === 200) {
+                          document.body.innerHTML = xhr.responseText;
+                      }
+                  };
+                  xhr.send(formData);
+              }
+            </script>
+        </body>
+        </html>

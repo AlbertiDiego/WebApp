@@ -1,0 +1,83 @@
+
+body {
+    background-color: #1b1b1b; 
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #333; 
+    color: white;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #8b34c9; 
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #7413ba;
+}
+
+.post-container {
+    background-color: #333;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.post {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.comments {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.post-box {
+    background-color: #333;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.comment-box {
+    background-color: #333;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.comments p {
+    margin-bottom: 5px;
+}
+
+a {
+    color: #8b34c9; 
+}
